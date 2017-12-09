@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Campus 42</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		$(function(){
+			$(".cell").click(function(){
+				var value = prompt($(this).data("host"))
+				if (value)
+				{
+					value = "e1z3r" + value.replace(" ", "p")
+					console.log(value)
+					$(this).data("host", value)
+					console.log($(this).data("host"))
+					data = [];
+					$("tr").each(function(){
+						row = [];
+						$(this).children(".cell").each(function(){
+							row.push($(this).data("host"))
+						})
+						data.push(row.slice())
+					})
+					console.log(data)
+					$.post({
+						url: "/savemap",
+						data: JSON.stringify(data),
+						success: function(){
+							location.reload();
+						}
+					})
+				}
+			})
+		})
+	</script>
+	{% load staticfiles %}
+	<style type="text/css">
+		html,body,main,#map{
+			height: 100%;
+		}
+		img {
+			object-fit: cover;
+	    	border-radius: 50%;
+		}
+		#map{
+			height: auto;
+			overflow-x: scroll;
+		}
+		.cell{
+			border: 1px solid #e4e4e4;
+			text-align: center;
+		}
+		.done{
+			padding: 20px;
+			background-color: red;
+		}
+		.empty{
+			padding: 20px;
+			background-color: white;
+		}
+		.table{
+			padding: 20px;
+			background-color: grey;
+		}
+		.computer{
+			padding: 20px;
+			background-color: green;
+			/*background-image: url("{% static 'mac.png' %}");*/
+		}
+		main{
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<!-- <button>
+		Hello
+	</button> -->
+		<table id="map">
+			{% for row in map %}
+				<tr>
+				{% for cell in row %}
+					{% if cell == 0 %}
+						<td class="cell empty" data-host="{{ cell }}">
+						</td>
+					{% elif cell == 1 %}
+						<td class="cell computer" data-host="{{ cell }}">
+						</td>
+					{% elif cell == 2 %}
+						<td class="cell table" data-host="{{ cell }}">
+						</td>
+					{% else %}
+						<td class="cell done" data-host="{{ cell }}">
+						</td>
+					{% endif %}
+				{% endfor %}
+				</tr>
+			{% endfor %}
+		</table>
+		<button>Save Map</button>
+	</main>
+</body>
+</html>

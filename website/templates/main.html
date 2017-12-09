@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Campus 42</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		function changeTab(id){
+			$(".cluster-map").each(function(){
+				if ($(this).attr('id') != id)
+					$(this).hide()
+				else
+					$(this).show()
+			})
+		}
+	</script>
+</head>
+<body>
+	<div style="margin-left: 25%; margin-right: 25%; margin-top: 5%">
+		<div style="text-align: center" id="tabs">
+			{% for zone_number, _ in locations.zones.items %}
+				<button class="tab-button" onclick='changeTab("zone-{{zone_number}}")'>Zone {{ zone_number }}</button>
+			{% endfor %}
+		</div>
+		{% for zone_number, zone_locations in locations.zones.items %}
+			<div class="cluster-map" id="zone-{{zone_number}}">
+				<h1 style="text-align: center;">Zone {{ zone_number }}</h1>
+				{% for user in zone_locations %}
+				<div style="margin: 10px">
+					<a href="https://profile.intra.42.fr/users/{{ user.login }}" target="_blank">
+						<img style="float:left" src="https://cdn.intra.42.fr/users/small_{{ user.login }}.jpg">
+					</a>
+				</div>
+				{% endfor %}
+			</div>
+			<br>
+		{% endfor %}
+	</div>
+</body>
+</html>
