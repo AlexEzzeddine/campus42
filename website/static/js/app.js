@@ -76,7 +76,6 @@ function updateUsers(){
 				$(window).scrollLeft($(tippy.reference).offset().left - $(window).width()/2);
 			});
 			$('a.profile-link').hover(function (e) {
-				console.log("hover!!!");
 				e.preventDefault();
 				populateTooltip(e.currentTarget._tippy);
 			}, function (e) {
