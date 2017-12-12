@@ -3,18 +3,20 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no">
 	<link rel="icon" href="{% static 'img/favicon.png' %}" type="image/svg">
 	<title>Campus 42</title>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> 
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> 
+	<link rel="stylesheet" type="text/css" href="{% static 'css/typeaheadjs.css' %}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script> -->
-	<script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script>
-	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script> -->
+	<script src="{% static 'js/typeahead.bundle.min.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="{% static 'js/tippy.all.min.js' %}"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 	<script>
 		var users = [];
 		function clearGrid(){
@@ -22,6 +24,17 @@
 			$(".computer").attr("data-user", "")
 			//Add unwrapping a tag!!!
 			//Add tooltip removal
+		}
+		function populateTooltip(tippy) {
+			var tooltip = tippy.popper;
+			var caller = $(tooltip._reference).find(".user");
+			var img = $(tooltip).find("img");
+			$(tooltip).find("#username").text(caller.data("user"));
+			$(tooltip).find("#hostname").text(caller.data("host"));
+			img.on('load', function(){
+				tippy.show();
+			});
+			img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
 		}
 		function updateUsers(){
 			$.get({
@@ -33,31 +46,69 @@
 						computer.css("background-image", "url(" + "https://cdn.intra.42.fr/users/small_" + user.login + ".jpg" + ")");
 						computer.wrap('<a class="profile-link" href="https://profile.intra.42.fr/users/' + user.login + '" target="_blank"></a>')
 						computer.attr("data-user", user.login)
-						computer.attr("title", "Hello!!!")
 						computer.addClass("user")
 					})
 					tippy('.profile-link',{
+						trigger: "manual",
+						dynamicTitle: true,
+						arrowTransform: "scale(1.5)",
 						html: "#tooltip",
 						performance: true,
 						arrow: true,
 						maxWidth: "300px",
-						wait: function (show, event) {
-						// onShow: function(){
-							caller = $(this._reference).find(".user");
-							var img = $(this).find("img");
-							img.on('load', show)
-							img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
-							$(this).find("#username").text(caller.data("user"));
-							$(this).find("#hostname").text(caller.data("host"));
+						popperOptions: {
+						  modifiers: {
+							preventOverflow: {
+							  enabled: false
+							},
+							hide: {
+							  enabled: false
+							}
+						  }
 						},
+						// onShow: function(){
+						// 	caller = $(this._reference).find(".user");
+						// 	var img = $(this).find("img");
+						// 	// img.on('load', show)
+						// 	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
+						// },
 						onHidden: function(){
 							caller = $(this._reference)
 							$(this).find("img").attr("src", "")
 						},
 					})
-					$("#autocomplete").autocomplete({
-						"source": users
+					var users = new Bloodhound({
+					  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("login"),
+					  queryTokenizer: Bloodhound.tokenizers.whitespace,
+					  local: users
 					});
+					$('#autocomplete').typeahead({
+						highlight: true
+					},
+					{
+						"display": "login",
+						"source": users
+					}).bind('typeahead:select', function(ev, suggestion) {
+						this.blur();
+						var tippy = $(".user[data-user='" + suggestion.value + "']").parent()[0]._tippy;
+						var hostname = suggestion.host;
+						var tabId = "tab-zone" + hostname[3];
+						$("#tabs a#" + tabId).tab('show');
+						populateTooltip(tippy)
+						$(window).scrollTop($(tippy.reference).offset().top - $(window).height()/2);
+						$(window).scrollLeft($(tippy.reference).offset().left - $(window).width()/2);
+					});
+					$('a.profile-link').hover(function (e) {
+						console.log("hover!!!");
+						e.preventDefault();
+						populateTooltip(e.currentTarget._tippy);
+					}, function (e) {
+						e.preventDefault();
+						e.currentTarget._tippy.hide();
+					}).click(function(e){
+						console.log("click!!!");
+						e.preventDefault();
+					})
 				}
 			})
 		}
@@ -65,19 +116,41 @@
 			clearGrid()
 			updateUsers()
 		}
+		lastTip = null;
 		$(function(){
 			updateUsers()
-			$(".zone-map").first().addClass("active");
-			$(".tab").click(function(e){
-				var currentAttrValue = $(this).attr('href');
- 				$(currentAttrValue).show().siblings().hide();
- 				$(this).parent('li').addClass('active').siblings().removeClass('active');
-				e.preventDefault();
+			$('#tabs a:first').tab('show');
+			// $('table:first').show();
+			$('#tabs a').on('click', function (e) {
+			  e.preventDefault()
+			  $(this).tab('show')
 			})
-			$("#autocomplete").on("autocompleteselect", function( event, ui ){
-				console.log(ui)
-				$(".computer[data-user='" + ui.item.value + "']").css("border", "1px solid black");
+			$("#autocomplete").keyup(function(e){
+				if(e.which == 13) {
+					$(".tt-suggestion:first-child").trigger('click');
+				}
 			});
+			$("#search-button").click(function(e){
+					$(".tt-suggestion:first-child").trigger('click');
+			});
+			lastTip = null;
+
+			// if(mobile) {
+			// 	$("a.profile-link").click(function(e) {
+			// 			if(lastTip != e.target) {
+			// 				e.preventDefault();
+			// 				lastTip = e.target;
+			// 				$(lastTip).trigger("hover");
+			// 			}
+			// 		});
+			// 	}
+			// }
+			// $("#autocomplete").on("autocompleteselect", function( event, ui ){
+			// 	var hostname = ui.item.host;
+			// 	var zone = "zone" + hostname[3];
+
+			// 	$(".user[data-user='" + ui.item.value + "']").css("border", "1px solid black");
+			// });
 			
 
 			// $(".cell").click(function(){
@@ -110,41 +183,23 @@
 	</script>
 	{% load staticfiles %}
 	<style type="text/css">
-		html,body{
-			height: 100%;
-			width: 100%;
+		body{
+			padding-top: 56px;
 		}
-		.zone-map.active{
-			display: table;
-		}
-		main{
-			padding-top: 100px;
-		}
+		/*@media (max-width: 620px) {
+			.navbar .form-inline {
+				margin-top: 10px;
+			}
+			body {
+				padding-top: 96px;
+			}
+		}*/
 		#card-student-picture{
 		}
-		ul#tabs{
-			margin-left: 50px;
-			margin-top: 10px;
-			display: inline;
-			list-style: none;
-		}
-		#tabs li{
-			padding: 10px;
-			margin: 10px;
-			background-color: grey;
-			border-radius: 3px;
-			font-size: 40px;
-			display: inline;
-		}
-		a{
-			color: white;
-			text-decoration: none;
-		}
 		.zone-map{
-			display: none;
 			margin: auto;
-			overflow-x: scroll;
-			overflow-y: scroll;
+			/*overflow-x: scroll;
+			overflow-y: scroll;*/
 		}
 		td{
 			border: 1px solid #e4e4e4;
@@ -163,79 +218,81 @@
 			background-color: grey;
 		}
 		.computer{
-			background-color: green;
+			background-image: url({% static 'mac.png' %});
 			background-repeat: no-repeat;
 			background-position: center center;
+			background-size: 80%;
+		}
+		.user{
 			background-size: cover;
-		}
-		header{
-			height: 100px;
-			position: fixed;
-			background-color: black;
-    		border:0;
-    		width:100vw;
-    		margin:0px auto;
-		}
-		#logo{
-			margin-left: 30px;
-			font-size: 40px;
-			color: white;
 		}
 		main{
 		}
 	</style>
 </head>
 <body>
+	<nav class="navbar fixed-top navbar-dark bg-dark flex-column flex-md-row">
+		<!-- <div class="container-fluid flex-column flex-md-row"> -->
+			<div class="d-flex d-md-inline-flex col-12 col-md-auto justify-content-between">
+				<div class="">
+					<a class="navbar-brand" href="/">Campus 42</a>
+				</div>
+				<div class="">
+					<ul class="nav nav-pills justify-content-end justify-content-sm-center" id="tabs">
+						<li class="nav-item"> 
+							<a href="#zone2" class="nav-link" id="tab-zone2">Zone 2</a>
+						</li>
+						<li class="nav-item">
+							<a href="#zone3" class="nav-link" id="tab-zone3">Zone 3</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- <div class="row"> -->
+				<div class="mt-2 mt-md-0 d-flex d-md-inline-flex col-12 col-md-auto justify-content-center">
+					<form class="form-inline">
+						<input class="form-control typeahead col-auto" type="search" name="login" id="autocomplete" placeholder="Type Intra Login...">
+						<button class="btn btn-primary ml-3 col-auto" type="button" id="search-button">Search</button>
+					</form>
+				</div>
+			<!-- </div> -->
+		<!-- </div> -->
+	</nav>
 	<div style="display:none;" id="tooltip" class="card">
 		<img id="card-student-picture" class="card-img-top">
-  		<div class="card-body">
-    		<h4 class="card-title" id="username"></h4>
-    		<p class="card-text text-primary" id="hostname"></p>
-  		</div>
+		<div class="card-body">
+			<h4 class="card-title" id="username"></h4>
+			<p class="card-text text-primary" id="hostname"></p>
+		</div>
 	</div>
-	<header>
-		<span id="logo"><a href="/">Campus 42</a></span>
-		<span id="controls-bar">
-			<ul id="tabs">
-				<li> 
-					<a href="#zone2" class="tab" id="tab-zone2">Zone 2</a>
-				</li>
-				<li>
-					<a href="#zone3" class="tab" id="tab-zone3">Zone 3</a>
-				</li>
-			</ul>
-			<input type="text" name="login" id="autocomplete" placeholder="Type Intra Login...">
-		</span>
-	</header>
 	<main>
-		{% for zone_name, zone in map.items %}
-			<table class="zone-map" id="{{ zone_name }}">
-				{% for row in zone %}
-					<tr>
-					{% for cell in row %}
-						{% if cell.type == "empty" %}
-							<td>
-								<div class="cell empty"></div>
-							</td>
-						{% elif cell.type == "table" %}
-							<td>
-								<div class="cell desk"></div>
-							</td>
-						{% else %}
-							<td>
-								<div class="cell computer" data-host="{{ cell.host }}"></div>
-								<!-- {% if cell != "computer" %}
-									<a href="https://profile.intra.42.fr/users/{{ cell }}" target="_blank">
-										<img style="width:40px; height:40px;" src="https://cdn.intra.42.fr/users/small_{{ cell }}.jpg">
-									</a>
-								{% endif %} -->
-							</td>
-						{% endif %}
-					{% endfor %}
-					</tr>
-				{% endfor %}
-			</table>
-		{% endfor %}
+		<div class="tab-content">
+			{% for zone_name, zone in map.items %}
+				<div class="tab-pane" id="{{ zone_name }}">
+					<table class="zone-map">
+						{% for row in zone %}
+							<tr>
+							{% for cell in row %}
+								{% if cell.type == "empty" %}
+									<td>
+										<div class="cell empty"></div>
+									</td>
+								{% elif cell.type == "table" %}
+									<td>
+										<div class="cell desk"></div>
+									</td>
+								{% else %}
+									<td>
+										<div class="cell desk computer" data-host="{{ cell.host }}"></div>
+									</td>
+								{% endif %}
+							{% endfor %}
+							</tr>
+						{% endfor %}
+					</table>
+				</div>
+			{% endfor %}
+		</div>
 	</main>
 </body>
 </html>
