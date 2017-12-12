@@ -10,229 +10,17 @@
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> 
 	<link rel="stylesheet" type="text/css" href="{% static 'css/typeaheadjs.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/site.css' %}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="{% static 'js/typeahead.bundle.min.js' %}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="{% static 'js/tippy.all.min.js' %}"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	<script>
-		var users = [];
-		function clearGrid(){
-			$(".computer").css("background-image", "")
-			$(".computer").attr("data-user", "")
-			//Add unwrapping a tag!!!
-			//Add tooltip removal
-		}
-		function populateTooltip(tippy) {
-			var tooltip = tippy.popper;
-			var caller = $(tooltip._reference).find(".user");
-			var img = $(tooltip).find("img");
-			$(tooltip).find("#username").text(caller.data("user"));
-			$(tooltip).find("#hostname").text(caller.data("host"));
-			img.on('load', function(){
-				tippy.show();
-			});
-			img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
-		}
-		function updateUsers(){
-			$.get({
-				"url": "get_active_users",
-				"success" : function(data){
-					users = data
-					users.forEach(function(user){
-						computer = $(".computer[data-host='" + user.host + "']");
-						computer.css("background-image", "url(" + "https://cdn.intra.42.fr/users/small_" + user.login + ".jpg" + ")");
-						computer.wrap('<a class="profile-link" href="https://profile.intra.42.fr/users/' + user.login + '" target="_blank"></a>')
-						computer.attr("data-user", user.login)
-						computer.addClass("user")
-					})
-					tippy('.profile-link',{
-						trigger: "manual",
-						dynamicTitle: true,
-						arrowTransform: "scale(1.5)",
-						html: "#tooltip",
-						performance: true,
-						arrow: true,
-						maxWidth: "300px",
-						popperOptions: {
-						  modifiers: {
-							preventOverflow: {
-							  enabled: false
-							},
-							hide: {
-							  enabled: false
-							}
-						  }
-						},
-						// onShow: function(){
-						// 	caller = $(this._reference).find(".user");
-						// 	var img = $(this).find("img");
-						// 	// img.on('load', show)
-						// 	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
-						// },
-						onHidden: function(){
-							caller = $(this._reference)
-							$(this).find("img").attr("src", "")
-						},
-					})
-					var users = new Bloodhound({
-					  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("login"),
-					  queryTokenizer: Bloodhound.tokenizers.whitespace,
-					  local: users
-					});
-					$('#autocomplete').typeahead({
-						highlight: true
-					},
-					{
-						"display": "login",
-						"source": users
-					}).bind('typeahead:select', function(ev, suggestion) {
-						this.blur();
-						var tippy = $(".user[data-user='" + suggestion.value + "']").parent()[0]._tippy;
-						var hostname = suggestion.host;
-						var tabId = "tab-zone" + hostname[3];
-						$("#tabs a#" + tabId).tab('show');
-						populateTooltip(tippy)
-						$(window).scrollTop($(tippy.reference).offset().top - $(window).height()/2);
-						$(window).scrollLeft($(tippy.reference).offset().left - $(window).width()/2);
-					});
-					$('a.profile-link').hover(function (e) {
-						console.log("hover!!!");
-						e.preventDefault();
-						populateTooltip(e.currentTarget._tippy);
-					}, function (e) {
-						e.preventDefault();
-						e.currentTarget._tippy.hide();
-					}).click(function(e){
-						console.log("click!!!");
-						e.preventDefault();
-					})
-				}
-			})
-		}
-		function updateGrid(){
-			clearGrid()
-			updateUsers()
-		}
-		lastTip = null;
-		$(function(){
-			updateUsers()
-			$('#tabs a:first').tab('show');
-			// $('table:first').show();
-			$('#tabs a').on('click', function (e) {
-			  e.preventDefault()
-			  $(this).tab('show')
-			})
-			$("#autocomplete").keyup(function(e){
-				if(e.which == 13) {
-					$(".tt-suggestion:first-child").trigger('click');
-				}
-			});
-			$("#search-button").click(function(e){
-					$(".tt-suggestion:first-child").trigger('click');
-			});
-			lastTip = null;
-
-			// if(mobile) {
-			// 	$("a.profile-link").click(function(e) {
-			// 			if(lastTip != e.target) {
-			// 				e.preventDefault();
-			// 				lastTip = e.target;
-			// 				$(lastTip).trigger("hover");
-			// 			}
-			// 		});
-			// 	}
-			// }
-			// $("#autocomplete").on("autocompleteselect", function( event, ui ){
-			// 	var hostname = ui.item.host;
-			// 	var zone = "zone" + hostname[3];
-
-			// 	$(".user[data-user='" + ui.item.value + "']").css("border", "1px solid black");
-			// });
-			
-
-			// $(".cell").click(function(){
-			// 	var value = prompt($(this).data("host"))
-			// 	if (value)
-			// 	{
-			// 		value = "e1z2r" + value.replace(" ", "p")
-			// 		console.log(value)
-			// 		$(this).data("host", value)
-			// 	}
-			// 	console.log($(this).data("host"))
-			// 	data = [];
-			// 	$("tr").each(function(){
-			// 		row = [];
-			// 		$(this).children(".cell").each(function(){
-			// 			row.push($(this).data("host"))
-			// 		})
-			// 		data.push(row.slice())
-			// 	})
-			// 	console.log(data)
-			// 	$.post({
-			// 		url: "/savemap",
-			// 		data: JSON.stringify(data),
-			// 		success: function(){
-			// 			location.reload();
-			// 		}
-			// 	})
-			// })
-		})
-	</script>
-	{% load staticfiles %}
-	<style type="text/css">
-		body{
-			padding-top: 56px;
-		}
-		/*@media (max-width: 620px) {
-			.navbar .form-inline {
-				margin-top: 10px;
-			}
-			body {
-				padding-top: 96px;
-			}
-		}*/
-		#card-student-picture{
-		}
-		.zone-map{
-			margin: auto;
-			/*overflow-x: scroll;
-			overflow-y: scroll;*/
-		}
-		td{
-			border: 1px solid #e4e4e4;
-		}
-		.cell{
-			width: 40px;
-			height: 40px;
-		}
-		.done{
-			background-color: red;
-		}
-		.empty{
-			background-color: white;
-		}
-		.desk{
-			background-color: grey;
-		}
-		.computer{
-			background-image: url({% static 'mac.png' %});
-			background-repeat: no-repeat;
-			background-position: center center;
-			background-size: 80%;
-		}
-		.user{
-			background-size: cover;
-		}
-		main{
-		}
-	</style>
+	<script src="{% static 'js/app.js' %}"></script>
 </head>
-<body>
+<body class="mt-5 mt-md-0">
 	<nav class="navbar fixed-top navbar-dark bg-dark flex-column flex-md-row">
-		<!-- <div class="container-fluid flex-column flex-md-row"> -->
 			<div class="d-flex d-md-inline-flex col-12 col-md-auto justify-content-between">
 				<div class="">
 					<a class="navbar-brand" href="/">Campus 42</a>
@@ -248,15 +36,12 @@
 					</ul>
 				</div>
 			</div>
-			<!-- <div class="row"> -->
 				<div class="mt-2 mt-md-0 d-flex d-md-inline-flex col-12 col-md-auto justify-content-center">
 					<form class="form-inline">
 						<input class="form-control typeahead col-auto" type="search" name="login" id="autocomplete" placeholder="Type Intra Login...">
 						<button class="btn btn-primary ml-3 col-auto" type="button" id="search-button">Search</button>
 					</form>
 				</div>
-			<!-- </div> -->
-		<!-- </div> -->
 	</nav>
 	<div style="display:none;" id="tooltip" class="card">
 		<img id="card-student-picture" class="card-img-top">
