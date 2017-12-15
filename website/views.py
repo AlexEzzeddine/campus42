@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+from website.map import school_map
+
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from collections import defaultdict
@@ -46,41 +47,15 @@ def update_users():
 			response = requests.get(url)
 			result += response.json()
 		active_users = parse_users(result)
-		
-
-def active_users_job():
-	while True:
-		update_users()
-		time.sleep(60)
+	return HttpResponse(json.dumps(active_users), content_type="application/json")
 
 def index(request):
 	return render(request, 'map.html', {'map': school_map})
-	#return HttpResponse(json.dumps(data), content_type="application/json")
 
 def get_active_users(request):
 	return HttpResponse(json.dumps(active_users), content_type="application/json")
 
-school_map = {"zone2": [], "zone3": []}
 import csv
-
-def read_map():
-	global school_map
-
-	with open('website/map.json', 'r') as jsonfile:
-		school_map = json.loads(jsonfile.read())
-	# with open('website/zone2.csv', 'r') as csvfile:
-	# 	mapreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-	# 	zone = []
-	# 	for row in mapreader:
-	# 		zone.append([x for x in row])
-	# 	school_map["zone2"] = zone
-
-	# with open('website/zone3.csv', 'r') as csvfile:
-	# 	mapreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-	# 	zone = []
-	# 	for row in mapreader:
-	# 		zone.append([x for x in row])
-	# 	school_map["zone3"] = zone
 
 def edit_map(request):
 	read_map()
@@ -98,5 +73,10 @@ def save_map(request):
 	print(school_map)
 	return HttpResponse()
 
-read_map()
+def active_users_job():
+	while True:
+		update_users()
+		time.sleep(60)
+
+#read_map()
 threading.Thread(target=active_users_job, args=()).start()
