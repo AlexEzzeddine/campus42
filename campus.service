@@ -1,0 +1,10 @@
+[Unit]
+Description=uWSGI instance to serve campus website
+After=network.target
+
+[Service]
+WorkingDirectory=/root/campus
+ExecStart=uwsgi uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
