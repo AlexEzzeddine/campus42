@@ -1,6 +1,8 @@
 # 42 Campus
 Website that allows 42 Silicon Valley students find each other on the map
 
+![](/screenshot.png)
+
 To install the project you will need to have *Python 3* and *pip3* installed and follow these steps:
 1. Clone this repository:
    ```bash
