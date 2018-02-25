@@ -33,6 +33,9 @@ function updateUsers(){
 		"url": "get_active_users",
 		"success" : function(data){
 			users = data
+			if (!users){
+				return;
+			}
 			users.forEach(function(user){
 				computer = $(".computer[data-host='" + user.host + "']");
 				computer.css("background-image", "url(" + "https://cdn.intra.42.fr/users/small_" + user.login + ".jpg" + ")");
