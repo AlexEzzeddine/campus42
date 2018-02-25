@@ -11,6 +11,7 @@ function populateTooltip(tippy) {
 	var tooltip = tippy.popper;
 	var caller = $(tippy.reference).find(".user");
 	var img = $(tooltip).find("img");
+	img.attr("src", '');
 	$(tooltip).find("#username").text(caller.data("user"));
 	$(tooltip).find("#hostname").text(caller.data("host"));
 	img.on('load', function(){
@@ -22,7 +23,7 @@ function populateTooltip(tippy) {
 			tippy.hide();
 		}
 	});
-	$(img).hide();
+	img.hide();
 	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
 	tippy.show();
 }
@@ -60,9 +61,6 @@ function updateUsers(){
 					  enabled: false
 					}
 				  }
-				},
-				onHidden: function(){
-					caller = $(this._reference)
 				},
 			})
 			var users = new Bloodhound({
@@ -140,9 +138,11 @@ $(function(){
 
 	$(window).mousemove(function(e) {
 		if (pushed) {
-			document.documentElement.scrollLeft -= e.clientX - lastClientX;
+			document.body.scrollLeft -= e.clientX - lastClientX; // Safari
+			document.documentElement.scrollLeft -= e.clientX - lastClientX; // Other browsers
 			lastClientX = e.clientX;
-			document.documentElement.scrollTop -= e.clientY - lastClientY;
+			document.body.scrollTop -= e.clientY - lastClientY; // Safari
+			document.documentElement.scrollTop -= e.clientY - lastClientY; // Other browsers
 			lastClientY = e.clientY;
 		}
 	});
