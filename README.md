@@ -7,7 +7,7 @@
 ## Requirements
 You will need to have *Python 3* and *pip 3* installed to run this project.
 
-Also you will need to create a [42 Intra Application](https://profile.intra.42.fr/oauth/applications/new) and copy your application ID and application Secret into corresponding variables in the top of the `/website/views.py`:
+**Also you will need to create a [42 Intra Application](https://profile.intra.42.fr/oauth/applications/new) and copy your application ID and application Secret into corresponding variables in the top of the `/website/views.py`**:
 
 <img src="/views_screenshot.png" height="300">
 
