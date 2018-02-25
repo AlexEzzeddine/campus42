@@ -37,3 +37,9 @@ To install the project you will need to have *Python 3* and *pip3* installed and
 
 
 Now you can access the website at `localhost:8000`
+
+When you are done:
+
+   1. Press `Ctrl + C` to stop the server.
+
+   2. Type `deactivate` in your shell to disable virtual environment.
