@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=0.1, shrink-to-fit=no, user-scalable=yes">
 	<link rel="icon" href="{% static 'img/favicon.png' %}" type="image/svg">
 	<title>Campus 42</title>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
@@ -15,7 +15,7 @@
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="{% static 'js/typeahead.bundle.min.js' %}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-	<script src="{% static 'js/tippy.all.min.js' %}"></script>
+	<script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 	<script src="{% static 'js/app.js' %}"></script>
 </head>
@@ -28,10 +28,13 @@
 				<div class="">
 					<ul class="nav nav-pills justify-content-end justify-content-sm-center" id="tabs">
 						<li class="nav-item"> 
-							<a href="#zone2" class="nav-link" id="tab-zone2">Zone 2</a>
+							<a href="#zone1" class="nav-link" id="tab-zone1">Zone 1 <span class="text-white">(<span class="users-online">10</span>/<span class="users-total">234</span>)</span></a>
+						</li>
+						<li class="nav-item"> 
+							<a href="#zone2" class="nav-link" id="tab-zone2">Zone 2 <span class="text-white">(<span class="users-online">4</span>/<span class="users-total">432</span>)</span></a>
 						</li>
 						<li class="nav-item">
-							<a href="#zone3" class="nav-link" id="tab-zone3">Zone 3</a>
+							<a href="#zone3" class="nav-link" id="tab-zone3">Zone 3 <span class="text-white">(<span class="users-online">5</span>/<span class="users-total">211</span>)</span></a>
 						</li>
 					</ul>
 				</div>
@@ -43,14 +46,8 @@
 					</form>
 				</div>
 	</nav>
-	<div style="display:none;" id="tooltip" class="card">
-		<img id="card-student-picture" class="card-img-top">
-		<div class="card-body">
-			<h4 class="card-title" id="username"></h4>
-			<p class="card-text text-primary" id="hostname"></p>
-		</div>
-	</div>
-	<main>
+
+	<main class="">
 		<div class="tab-content">
 			{% for zone_name, zone in map.items %}
 				<div class="tab-pane" id="{{ zone_name }}">
@@ -79,5 +76,16 @@
 			{% endfor %}
 		</div>
 	</main>
+<!-- 	<footer class="bg-dark text-light rounded">
+		<span class="author">Made by <a href="https://github.com/AlexEzzeddine">Alex Ezzeddine</a></span>
+	</footer> -->
+	<div style="display:none;" id="tooltip" class="card">
+		<div class="loader mx-auto"></div>
+		<img id="card-student-picture" class="card-img-top">
+		<div class="card-body">
+			<h4 class="card-title" id="username"></h4>
+			<p class="card-text text-primary" id="hostname"></p>
+		</div>
+	</div>
 </body>
 </html>
