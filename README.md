@@ -1,5 +1,5 @@
 # 42 Campus
-42 Campus is a website that allows 42 Silicon Valley students find each other on the map. It is written in Python Django and uses 42 API to access users locations.
+[42 Campus](https://campus.42.us.org) is a website that allows 42 Silicon Valley students find each other on the map. It is written in Python Django and uses 42 API to access users locations.
 
 ![](/screenshot.png)
 
@@ -11,8 +11,6 @@ Also you will need to create a [42 Intra Application](https://profile.intra.42.f
 <img src="/views_screenshot.png" height="300">
 
 ## Installation
-
-1. Clone this repository:
    ```bash
    git clone https://github.com/AlexEzzeddine/campus42.git campus # clone the repo
    cd campus
