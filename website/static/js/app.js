@@ -39,6 +39,9 @@ function updateUsers(){
 				computer.attr("data-user", user.login)
 				computer.addClass("user")
 			})
+			for (var i = 1; i < 4 ; i++) {
+				$("#tab-zone" + i + " .users-online").text($("#zone" + i + " .user").length);
+			}
 			tippy('.profile-link',{
 				trigger: "manual",
 				updateDuration: 0,
