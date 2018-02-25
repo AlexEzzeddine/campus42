@@ -22,8 +22,8 @@ function populateTooltip(tippy) {
 			tippy.hide();
 		}
 	});
-	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
 	$(img).hide();
+	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
 	tippy.show();
 }
 
@@ -35,7 +35,7 @@ function updateUsers(){
 			users.forEach(function(user){
 				computer = $(".computer[data-host='" + user.host + "']");
 				computer.css("background-image", "url(" + "https://cdn.intra.42.fr/users/small_" + user.login + ".jpg" + ")");
-				computer.wrap('<a class="profile-link" href="https://profile.intra.42.fr/users/' + user.login + '" target="_blank"></a>')
+				computer.wrap('<a class="profile-link" title="test" href="https://profile.intra.42.fr/users/' + user.login + '" target="_blank"></a>')
 				computer.attr("data-user", user.login)
 				computer.addClass("user")
 			})
@@ -79,6 +79,7 @@ function updateUsers(){
 				var hostname = suggestion.host;
 				var tabId = "tab-zone" + hostname[3];
 				$("#tabs a#" + tabId).tab('show');
+				tippy.hovered = true;
 				populateTooltip(tippy)
 				$(window).scrollTop($(tippy.reference).offset().top - $(window).height()/2);
 				$(window).scrollLeft($(tippy.reference).offset().left - $(window).width()/2);
