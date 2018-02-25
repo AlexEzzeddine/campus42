@@ -1,40 +1,40 @@
 # 42 Campus
-Website that allows 42 Silicon Valley students find each other on the map
+42 Campus is a website that allows 42 Silicon Valley students find each other on the map. It is written in Python Django and uses 42 API to access users locations.
 
 ![](/screenshot.png)
 
-To install the project you will need to have *Python 3* and *pip3* installed and follow these steps:
+## Requirements
+You will need to have *Python 3* and *pip 3* installed to run this project.
+
+Also you will need to create a [42 Intra Application](https://profile.intra.42.fr/oauth/applications/new) and copy your application ID and application Secret into corresponding variables in the top of the `/website/views.py`:
+
+<img src="/views_screenshot.png" height="300">
+
+## Installation
+
 1. Clone this repository:
    ```bash
-   git clone https://github.com/AlexEzzeddine/campus42.git campus
+   git clone https://github.com/AlexEzzeddine/campus42.git campus # clone the repo
    cd campus
+   python3 -m venv --prompt campus env # create virtual environment
+   source env/bin/activate # enable virtual environment
+   pip install -r requirements.txt # install dependencies
    ```
-2. Create a virtual environment and activate it:
-   ```bash
-   python3 -m venv --prompt campus env
-   source env/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run a server:
-
-   ```bash
-   ./manage.py runserver
-   ```
-
-
-   or
-
-
-   ```bash
-   ./manage.py runserver -s 0:port
-   ```
+## Usage
    
-   
-   where `0` is a shortcut for `0.0.0.0` to make your website publicly available and `port` is a desired port number
+Run a server with:
 
+```bash
+./manage.py runserver
+```
+
+or
+
+```bash
+./manage.py runserver -s 0:port
+```
+
+where `0` is a shortcut for `0.0.0.0` to make your website publicly available and `port` is a desired port number
 
 Now you can access the website at `localhost:8000`
 
