@@ -16,8 +16,8 @@ INTRA_API_ROUTE = "https://api.intra.42.fr/v2/"
 token = None
 token_expires_at = int(time.time())
 active_users = None
-client_id = "cf47740891d71e7625a0388e11fe649b939507d1f11b01af651a88fbd3f0aee8"
-client_secret = "3b25b71c424bfa2e229926ac538bed03a24b09e937b0fd53eec7532eaab60d39"
+client_id = "Insert 42 application id here"
+client_secret = "Insert 42 application secret here"
 
 def get_token():
 	global token
