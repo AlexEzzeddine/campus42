@@ -1,5 +1,6 @@
 # 42 Campus
-[42 Campus](https://campus.42.us.org) is a website that allows 42 Silicon Valley students find each other on the map. It is written in Python Django and uses 42 API to access users locations.
+<a href="https://campus.42.us.org" target="_blank">42 Campus</a>
+(available only inside the 42 network) is a website that allows 42 Silicon Valley students to find each other on the map. It is written in Python Django and uses 42 API to access users locations.
 
 ![](/screenshot.png)
 
