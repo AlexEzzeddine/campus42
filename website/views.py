@@ -47,7 +47,9 @@ def update_users():
 			response = requests.get(url)
 			result += response.json()
 		active_users = parse_users(result)
-	return HttpResponse(json.dumps(active_users), content_type="application/json")
+		print("finished updating Active Users...")
+	else:
+		print("error updating Active Users...")
 
 def index(request):
 	return render(request, 'map.html', {'map': school_map})
@@ -75,7 +77,10 @@ def save_map(request):
 
 def active_users_job():
 	while True:
-		update_users()
+		try:
+			update_users()
+		except Exception as e:
+			print(e)
 		time.sleep(60)
 
 #read_map()
