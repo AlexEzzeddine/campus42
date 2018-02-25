@@ -75,7 +75,10 @@ def save_map(request):
 
 def active_users_job():
 	while True:
-		update_users()
+		try:
+			update_users()
+		except Exception as e:
+			print(e)
 		time.sleep(60)
 
 #read_map()
