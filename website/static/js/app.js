@@ -9,14 +9,22 @@ function clearGrid(){
 
 function populateTooltip(tippy) {
 	var tooltip = tippy.popper;
-	var caller = $(tooltip._reference).find(".user");
+	var caller = $(tippy.reference).find(".user");
 	var img = $(tooltip).find("img");
 	$(tooltip).find("#username").text(caller.data("user"));
 	$(tooltip).find("#hostname").text(caller.data("host"));
 	img.on('load', function(){
+		tippy.hide();
+		$(tooltip).find(".loader").hide();
+		$(img).show();
 		tippy.show();
+		if (!tippy.hovered) {
+			tippy.hide();
+		}
 	});
 	img.attr("src", 'https://cdn.intra.42.fr/users/medium_'+ caller.data("user") + '.jpg')
+	$(img).hide();
+	tippy.show();
 }
 
 function updateUsers(){
@@ -33,6 +41,7 @@ function updateUsers(){
 			})
 			tippy('.profile-link',{
 				trigger: "manual",
+				updateDuration: 0,
 				dynamicTitle: true,
 				arrowTransform: "scale(1.5)",
 				html: "#tooltip",
@@ -51,7 +60,6 @@ function updateUsers(){
 				},
 				onHidden: function(){
 					caller = $(this._reference)
-					$(this).find("img").attr("src", "")
 				},
 			})
 			var users = new Bloodhound({
@@ -77,9 +85,11 @@ function updateUsers(){
 			});
 			$('a.profile-link').hover(function (e) {
 				e.preventDefault();
+				e.currentTarget._tippy.hovered = true;
 				populateTooltip(e.currentTarget._tippy);
 			}, function (e) {
 				e.preventDefault();
+				e.currentTarget._tippy.hovered = false;
 				e.currentTarget._tippy.hide();
 			});
 		}
@@ -97,8 +107,8 @@ $(function(){
 	updateUsers()
 	$('#tabs a:first').tab('show');
 	$('#tabs a').on('click', function (e) {
-	  e.preventDefault()
-	  $(this).tab('show')
+		e.preventDefault()
+		$(this).tab('show')
 	})
 	$("#autocomplete").keyup(function(e){
 		if(e.which == 13) {
@@ -108,7 +118,70 @@ $(function(){
 	$("#search-button").click(function(e){
 			$(".tt-suggestion:first-child").trigger('click');
 	});
-	lastTip = null;
+
+	var pushed = false;
+
+	$("main").mousedown(function(e) {
+		$("body").css('cursor', 'move');
+		pushed = true;
+		lastClientX = e.clientX;
+		lastClientY = e.clientY;
+		e.preventDefault();
+	});
+
+	$(window).mouseup(function(e) {
+		$("body").css('cursor', 'default');
+		pushed = false;
+	});
+
+	$(window).mousemove(function(e) {
+		if (pushed) {
+			document.documentElement.scrollLeft -= e.clientX - lastClientX;
+			lastClientX = e.clientX;
+			document.documentElement.scrollTop -= e.clientY - lastClientY;
+			lastClientY = e.clientY;
+		}
+	});
+
+	// $(".zone-map").data("scale", 1.0);
+	// var x = $(".tab-pane.active .zone-map").width() / 2 - $(window).width() / 2;
+	// var y = $(".tab-pane.active .zone-map").height() / 2 - $(window).height() / 2;
+	// $(".tab-pane.active").scrollLeft(x);
+	// $(".tab-pane.active").scrollTop(y);
+	// $(document).on('wheel mousewheel', function(e){
+ //        var delta;
+ //        var scale = $(".tab-pane.active .zone-map").data("scale");
+ //        e.preventDefault();
+ //        if (e.originalEvent.wheelDelta !== undefined)
+ //            delta = e.originalEvent.wheelDelta;
+ //        else
+ //            delta = e.originalEvent.deltaY * -1;
+ //        if(delta > 0) {
+	// 		if (scale >= 2)
+	// 			return;
+ //            scale *= 1.2;
+ //        }
+ //        else{
+ //        	if (scale <= 0.5)
+	// 			return;
+ //        	scale /= 1.2;
+ //        }
+ //        $(".tab-pane.active .zone-map").data("scale", scale);
+ //        //var offset = $(".tab-pane.active table.zone-map").offset();
+ //        //console.log((offset.left) + " " + (offset.top));
+	// 	$(".tab-pane.active table.zone-map").css("transform-origin", "center center");
+	// 	//var translate_value = "translate(" + x + "px, " + y + "px)";
+	// 	$(".tab-pane.active table.zone-map").css("transform", "scale(" + scale + ")");
+	// 	var x = e.clientX - $(window).width() / 2 + $(".tab-pane.active").scrollLeft();
+	// 	var y = e.clientY - $(window).height() / 2 + $(".tab-pane.active").scrollTop();
+	// 	console.log(x + " " + y);
+	// 	$(".tab-pane.active").scrollLeft(x);
+	// 	$(".tab-pane.active").scrollTop(y);
+ //    });
+	// $(document).on("mousemove", function(e){
+	// 	var offset = $(".tab-pane.active .zone-map").offset();
+	//     console.log((offset.left) + " " + (offset.top));
+	// })
 
 	// if(mobile) {
 	// 	$("a.profile-link").click(function(e) {
