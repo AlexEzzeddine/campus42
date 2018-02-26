@@ -1,128 +1,102 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no, user-scalable=yes">
+	<meta name="viewport" content="width=device-width, initial-scale=0.1, shrink-to-fit=no, user-scalable=yes">
 	<link rel="icon" href="{% static 'img/favicon.png' %}" type="image/svg">
 	<title>Campus 42</title>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> 
-	<link rel="stylesheet" type="text/css" href="{% static 'css/typeaheadjs.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/site.css' %}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="{% static 'js/typeahead.bundle.min.js' %}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-	<script src="{% static 'js/tippy.all.min.js' %}"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	<!-- <script src="{% static 'js/app.js' %}"></script> -->
-	<script>
-		$(function(){
-			$(".cell").click(function(){
-				var value = prompt($(this).data("host"))
-				if (value)
-				{
-					value = "e1z1r" + value.replace(" ", "p")
-					console.log(value)
-					$(this).data("host", value)
-					console.log($(this).data("host"))
-					data = [];
-					$("tr").each(function(){
-						row = [];
-						$(this).children(".cell").each(function(){
-							row.push($(this).data("host"))
-						})
-						data.push(row.slice())
-					})
-					console.log(data)
-					$.post({
-						url: "/savemap",
-						data: JSON.stringify(data),
-						success: function(){
-							location.reload();
-						}
-					})
-				}
-			})
-		})
-	</script>
-	<style type="text/css">
-		#map{
-			margin:auto;
-		}
-		/*html,body,main,#map{
-			height: 100%;
-		}
-		img {
-			object-fit: cover;
-	    	border-radius: 50%;
-		}
-		#map{
-			height: auto;
-			overflow-x: scroll;
-		}
-		.cell{
-			border: 1px solid #e4e4e4;
-			text-align: center;
-		}
-		.done{
-			padding: 20px;
-			background-color: red;
-		}
-		.empty{
-			padding: 20px;
-			background-color: white;
-		}
-		.table{
-			padding: 20px;
-			background-color: grey;
-		}
-		.computer{
-			padding: 20px;
-			background-color: green;
-			/*background-image: url("{% static 'mac.png' %}");*/
-		}
-		main{
-		}*/
-	</style>
 </head>
-<body>
+<body class="mt-5 mt-md-0">
 	<nav class="navbar fixed-top navbar-dark bg-dark flex-column flex-md-row">
 			<div class="d-flex d-md-inline-flex col-12 col-md-auto justify-content-between">
 				<div class="">
 					<a class="navbar-brand" href="/">Campus 42</a>
 				</div>
-				
+				<div class="">
+					<ul class="nav nav-pills justify-content-end justify-content-sm-center" id="tabs">
+						<li class="nav-item"> 
+							<a href="#zone1" class="nav-link" id="tab-zone1">Zone 1 <span class="text-white">(<span class="users-online">0</span>/<span class="users-total">315</span>)</span></a>
+						</li>
+						<li class="nav-item"> 
+							<a href="#zone2" class="nav-link" id="tab-zone2">Zone 2 <span class="text-white">(<span class="users-online">0</span>/<span class="users-total">311</span>)</span></a>
+						</li>
+						<li class="nav-item">
+							<a href="#zone3" class="nav-link" id="tab-zone3">Zone 3 <span class="text-white">(<span class="users-online">0</span>/<span class="users-total">193</span>)</span></a>
+						</li>
+					</ul>
+				</div>
 			</div>
 	</nav>
-	<main>
-		<!-- <div class="bg-primary text-white rounded mx-5 my-2 px-4">
-			Hello, pisciner! Please take your time to find your computer on this map and click on it. The form will appear and if your hostname is not in my database yet you should enter the result of command "hostname -s" in the text field
-		</div> -->
-		<table id="map">
-			{% for row in map %}
-				<tr>
-				{% for cell in row %}
-					{% if cell == 0 %}
-						<td class="cell empty" data-host="{{ cell }}">
-						</td>
-					{% elif cell == 1 %}
-						<td class="cell desk computer" data-host="{{ cell }}">
-						</td>
-					{% elif cell == 2 %}
-						<td class="cell desk" data-host="{{ cell }}">
-						</td>
-					{% else %}
-						<td class="cell done" data-host="{{ cell }}">
-						</td>
-					{% endif %}
-				{% endfor %}
-				</tr>
+
+	<main class="">
+		<div class="tab-content">
+			{% for zone_name, zone in map.items %}
+				<div class="tab-pane" id="{{ zone_name }}">
+					<table class="zone-map">
+						{% for row in zone %}
+							<tr>
+							{% for cell in row %}
+								{% if cell.type == "empty" %}
+									<td>
+										<div class="cell empty"></div>
+									</td>
+								{% elif cell.type == "table" %}
+									<td>
+										<div class="cell desk"></div>
+									</td>
+								{% else %}
+									<td>
+										<div class="cell desk computer" data-host="{{ cell.host }}"></div>
+									</td>
+								{% endif %}
+							{% endfor %}
+							</tr>
+						{% endfor %}
+					</table>
+				</div>
 			{% endfor %}
-		</table>
-		<button>Save Map</button>
+		</div>
 	</main>
 </body>
 </html>
+
+<script>
+	$(function(){
+		$($('#tabs a')[1]).tab('show');
+		$('#tabs a').on('click', function (e) {
+			e.preventDefault()
+			$(this).tab('show')
+		});
+		// $("table").click(function(e){
+		// 	var td = $(e.target).parent();
+		// 	td.html("<div class=\"cell empty\"></div>")
+		// });
+		$("table").click(function(e){
+			e.preventDefault();
+			var td = $(e.target).parent();
+			var table = td.parent().parent().children();
+			clickRow = table.index(td.parent());
+			clickCol = td.parent().children().index(td);
+		});
+		$("table").contextmenu(function(e){
+			e.preventDefault();
+			var td = $(e.target).parent();
+			var table = td.parent().parent().children();
+			var row = table.index(td.parent());
+			var col = td.parent().children().index(td);
+			var size = table.length;
+			console.log("Row: " + row + " Col: " + col + " Size: " + size);
+			$($(table[row]).children()[col]).children().replaceWith($($(table[clickRow]).children()[clickCol]).html());
+			$($(table[clickRow]).children()[clickCol]).html("<div class=\"cell empty\"></div>")
+		});
+	})
+</script>

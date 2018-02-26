@@ -60,9 +60,7 @@ def get_active_users(request):
 import csv
 
 def edit_map(request):
-	read_map()
 	return render(request, 'edit_map.html', {'map': school_map})
-	#return HttpResponse(json.dumps(data), content_type="application/json")
 
 @csrf_exempt
 def save_map(request):
