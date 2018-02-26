@@ -2,14 +2,14 @@
 <a href="https://campus.42.us.org" target="_blank">42 Campus</a>
 (available only inside the 42 network) is a website that allows 42 Silicon Valley students to find each other on the map. It is written in Python Django and uses 42 API to access users locations.
 
-![](/screenshot.png)
+![](screenshots/app_screenshot.png)
 
 ## Requirements
 You will need to have *Python 3* and *pip 3* installed to run this project.
 
 **Also you will need to create a [42 Intra Application](https://profile.intra.42.fr/oauth/applications/new) and copy your application ID and application Secret into corresponding variables in the top of the `/website/views.py`**:
 
-<img src="/views_screenshot.png" height="300">
+<img src="screenshots/views_screenshot.png" height="300">
 
 ## Installation
    ```bash
