@@ -1,55 +1,73 @@
-body{
+body {
+	background-color: #505050;
 	padding-top: 56px;
 	width: 100%;
 	height: 100%;
 }
-#card-student-picture{
+
+nav {
+	box-shadow: 0px 0px 5px 3px;
 }
-.zone-map{
+
+.zone-map {
 	margin: auto;
+	box-shadow: 0px 0px 75px 20px;
 }
-td{
+
+td {
 	border: 1px solid #e4e4e4;
 }
-.cell{
+
+.cell {
 	width: 40px;
 	height: 40px;
 }
-.done{
+
+.done {
 	background-color: red;
 }
-.empty{
+
+.empty {
 	background-color: white;
 }
-.desk{
+
+.desk {
 	background-color: grey;
 }
-.computer{
+
+.computer {
 	background-image: url("/static/img/mac.png");
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 80%;
 }
-.user{
+
+.user {
 	background-size: cover;
 }
 
-main{
+main {
 	width: 100%;
 	height: 100%;
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
+	border: 16px solid #f3f3f3; /* Light grey */
+	border-top: 16px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	animation: spin 2s linear infinite;
 }
 
-
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+footer {
+	padding: 3px 11px;
+	position: fixed;
+	bottom: 1%;
+	right: 1%;
 }
