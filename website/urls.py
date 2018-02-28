@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^save_map$', views.save_map, name='save_map'),
     url(r'^get_active_users$', views.get_active_users, name='get_active_users'),
     url(r'^update_users$', views.update_users, name='update_users'),
+    url(r'^hostnames$', views.show_hostnames, name='show_hostnames'),
 ]

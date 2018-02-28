@@ -54,6 +54,10 @@ def update_users():
 def index(request):
 	return render(request, 'map.html', {'map': school_map})
 
+
+def show_hostnames(request):
+	return render(request, 'hostnames.html', {'map': school_map})
+
 def get_active_users(request):
 	return HttpResponse(json.dumps(active_users), content_type="application/json")
 
