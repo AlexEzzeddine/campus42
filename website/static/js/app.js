@@ -43,7 +43,7 @@ function updateUsers(){
 				computer.attr("data-user", user.login)
 				computer.addClass("user")
 			})
-			for (var i = 1; i < 4 ; i++) {
+			for (var i = 1; i < 5 ; i++) {
 				$("#tab-zone" + i + " .users-online").text($("#zone" + i + " .user").length);
 			}
 			tippy('.profile-link',{
