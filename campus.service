@@ -5,6 +5,9 @@ After=network.target
 [Service]
 WorkingDirectory=/root/campus
 ExecStart=/usr/local/bin/uwsgi uwsgi.ini
+KillSignal=SIGINT
+Restart=always
+Type=notify
 
 [Install]
 WantedBy=multi-user.target
